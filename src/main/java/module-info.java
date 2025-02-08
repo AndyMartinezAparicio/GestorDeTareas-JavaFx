@@ -5,5 +5,6 @@ module com.example.gestordetareas {
     requires com.dlsc.formsfx;
 
     opens com.example.gestordetareas to javafx.fxml;
+    opens models to javafx.base;
     exports com.example.gestordetareas;
 }
