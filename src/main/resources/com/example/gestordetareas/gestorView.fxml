@@ -3,16 +3,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="480.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestordetareas.GestorViewController">
+<AnchorPane prefHeight="480.0" prefWidth="667.0" stylesheets="@../../../Styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestordetareas.GestorViewController">
    <children>
       <TableView fx:id="tareasTable" layoutX="57.0" layoutY="40.0" prefHeight="322.0" prefWidth="568.0">
         <columns>
           <TableColumn fx:id="marcarColumn" editable="false" prefWidth="31.19997787475586" reorderable="false" resizable="false" sortable="false" />
-          <TableColumn fx:id="tareasColumn" editable="false" prefWidth="467.2000274658203" reorderable="false" resizable="false" sortable="false" text="Tarea" />
-            <TableColumn fx:id="eliminarColumn" editable="false" minWidth="0.0" prefWidth="70.0" reorderable="false" resizable="false" sortable="false" text="Eliminar" />
+          <TableColumn fx:id="tareasColumn" editable="false" prefWidth="451.9999771118164" reorderable="false" resizable="false" sortable="false" text="Tarea" />
+            <TableColumn fx:id="eliminarColumn" editable="false" minWidth="0.0" prefWidth="86.4000244140625" reorderable="false" resizable="false" sortable="false" text="Eliminar" />
         </columns>
       </TableView>
-      <TextField fx:id="descripcionField" layoutX="226.0" layoutY="389.0" onAction="#agregarTarea" prefHeight="39.0" prefWidth="368.0" />
-      <Button fx:id="agregarBtn" layoutX="99.0" layoutY="389.0" mnemonicParsing="false" onAction="#agregarTarea" text="Agregar" />
+      <TextField fx:id="descripcionField" layoutX="226.0" layoutY="408.0" onAction="#agregarTarea" prefHeight="39.0" prefWidth="368.0" />
+      <Button fx:id="agregarBtn" layoutX="99.0" layoutY="408.0" mnemonicParsing="false" onAction="#agregarTarea" text="Agregar" />
+      <Label fx:id="tareasCompletadasLabel" layoutX="443.0" layoutY="371.0" text="Tareas completadas: 0 / 0" textFill="WHITE" />
    </children>
 </AnchorPane>

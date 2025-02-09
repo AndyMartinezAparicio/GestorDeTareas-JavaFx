@@ -28,6 +28,9 @@ public class GestorViewController {
     private TableColumn<Tarea, String> tareasColumn;
 
     @FXML
+    private Label tareasCompletadasLabel;
+
+    @FXML
     private TableView<Tarea> tareasTable;
     private ObservableList<Tarea> tareas;
     private Button eliminarBtn;
@@ -56,7 +59,8 @@ public class GestorViewController {
 
                         // Aplicar estilo si la tarea está completada
                         if (tarea.isCompletada()) {
-                            setStyle("-fx-text-fill: gray; -fx-strikethrough: true; -fx-background-color: #f0f0f0;"); // Texto gris y tachado
+                            setStyle("-fx-text-fill: gray; -fx-background-color: #f0f0f0;"); // Texto gris
+
                         } else {
                             setStyle(""); // Limpiar estilos si no está completada
                         }
@@ -91,6 +95,7 @@ public class GestorViewController {
 
                             // Refrescar la tabla para actualizar la interfaz
                             tareasTable.refresh();
+                            actualizarContadores(); // Actualizar contadores
                         });
                     }
                 }
@@ -115,6 +120,7 @@ public class GestorViewController {
                         deleteButton.setOnAction(event -> {
                             Tarea tarea = getTableView().getItems().get(getIndex());
                             tareas.remove(tarea);
+                            actualizarContadores(); // Actualizar contadores
                         });
                     }
                 }
@@ -124,6 +130,7 @@ public class GestorViewController {
         // Asignar la lista observable a la TableView
         tareasTable.setItems(tareas);
         tareasTable.setSelectionModel(null);
+        actualizarContadores(); // Inicializar contadores
 
     }
 
@@ -139,6 +146,7 @@ public class GestorViewController {
 
             // Limpiar el TextField después de agregar la tarea
             descripcionField.clear();
+            actualizarContadores(); // Actualizar contadores
         } else {
             // Mostrar un mensaje de error si el campo está vacío
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -147,6 +155,15 @@ public class GestorViewController {
             alert.setContentText("Por favor, ingresa una descripción para la tarea.");
             alert.showAndWait();
         }
+    }
+
+    // Método para actualizar el contador de tareas hechas
+    private void actualizarContadores() {
+        int totalTareas = tareas.size(); // Total de tareas
+        int tareasCompletadas = (int) tareas.stream().filter(Tarea::isCompletada).count(); // Tareas completadas
+
+        // Actualizar las etiquetas
+        tareasCompletadasLabel.setText("Tareas completadas: " + tareasCompletadas + " / " + totalTareas);
     }
 
 }
