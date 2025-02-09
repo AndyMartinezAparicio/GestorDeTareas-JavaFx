@@ -8,123 +8,106 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import models.Tarea;
 
-
-
 public class GestorViewController {
 
     @FXML
-    private Button agregarBtn;
-
-    @FXML
     private TextField descripcionField;
-
     @FXML
     private TableColumn<Tarea, String> eliminarColumn;
-
     @FXML
     private TableColumn<Tarea, Boolean> marcarColumn;
-
     @FXML
     private TableColumn<Tarea, String> tareasColumn;
-
     @FXML
     private Label tareasCompletadasLabel;
-
     @FXML
     private TableView<Tarea> tareasTable;
+
     private ObservableList<Tarea> tareas;
-    private Button eliminarBtn;
 
     public void initialize() {
         // Inicializar la lista observable de tareas
         tareas = FXCollections.observableArrayList();
 
-
         // Configurar la columna "tareasColumn" para mostrar la descripción de la tarea
         tareasColumn.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        tareasColumn.setCellFactory(column -> {
-            return new TableCell<Tarea, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+        tareasColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
-                    if (empty || item == null) {
-                        setText(null);
-                        setStyle(""); // Limpiar estilos si no hay contenido
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle(""); // Limpiar estilos si no hay contenido
+                } else {
+                    setText(item); // Mostrar la descripción de la tarea
+
+                    // Obtener la tarea correspondiente a esta fila
+                    Tarea tarea = getTableView().getItems().get(getIndex());
+
+                    // Aplicar estilo si la tarea está completada
+                    if (tarea.isCompletada()) {
+                        setStyle("-fx-text-fill: gray; -fx-background-color: #f0f0f0;"); // Texto gris
+
                     } else {
-                        setText(item); // Mostrar la descripción de la tarea
-
-                        // Obtener la tarea correspondiente a esta fila
-                        Tarea tarea = getTableView().getItems().get(getIndex());
-
-                        // Aplicar estilo si la tarea está completada
-                        if (tarea.isCompletada()) {
-                            setStyle("-fx-text-fill: gray; -fx-background-color: #f0f0f0;"); // Texto gris
-
-                        } else {
-                            setStyle(""); // Limpiar estilos si no está completada
-                        }
+                        setStyle(""); // Limpiar estilos si no está completada
                     }
                 }
-            };
+            }
         });
 
 
         // Configurar la columna "marcarColumn" para mostrar un CheckBox
         marcarColumn.setCellValueFactory(cellData -> cellData.getValue().completadaProperty());
         marcarColumn.setStyle("-fx-alignment: CENTER");
-        marcarColumn.setCellFactory(column -> {
-            return new TableCell<Tarea, Boolean>() {
-                private final CheckBox checkBox = new CheckBox();
+        marcarColumn.setCellFactory(column -> new TableCell<>() {
+            private final CheckBox checkBox = new CheckBox();
 
-                @Override
-                protected void updateItem(Boolean isCompleted, boolean empty) {
-                    super.updateItem(isCompleted, empty);
+            @Override
+            protected void updateItem(Boolean isCompleted, boolean empty) {
+                super.updateItem(isCompleted, empty);
 
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        // Vincular el estado del CheckBox al atributo booleano de la Tarea
-                        checkBox.setSelected(isCompleted);
-                        setGraphic(checkBox);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    // Vincular el estado del CheckBox al atributo booleano de la Tarea
+                    checkBox.setSelected(isCompleted);
+                    setGraphic(checkBox);
 
-                        // Escuchar cambios en el CheckBox para actualizar el estado de la Tarea
-                        checkBox.setOnAction(event -> {
-                            Tarea tarea = getTableView().getItems().get(getIndex());
-                            tarea.setCompletada(checkBox.isSelected());
+                    // Escuchar cambios en el CheckBox para actualizar el estado de la Tarea
+                    checkBox.setOnAction(event -> {
+                        Tarea tarea = getTableView().getItems().get(getIndex());
+                        tarea.setCompletada(checkBox.isSelected());
 
-                            // Refrescar la tabla para actualizar la interfaz
-                            tareasTable.refresh();
-                            actualizarContadores(); // Actualizar contadores
-                        });
-                    }
+
+                        tareasTable.refresh();   // Refrescar la tabla para actualizar la interfaz
+                        actualizarContadores(); // Actualizar contadores
+                    });
                 }
-            };
+            }
         });
 
         // Configurar la columna "eliminarColumn" para mostrar un botón de eliminación
         eliminarColumn.setStyle("-fx-alignment: CENTER");
-        eliminarColumn.setCellFactory(column -> {
-            return new TableCell<Tarea, String>() {
-                private final Button deleteButton = new Button("X");
+        eliminarColumn.setCellFactory(column -> new TableCell<>() {
+            private final Button deleteButton = new Button("X");
 
 
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(deleteButton);
-                        deleteButton.setOnAction(event -> {
-                            Tarea tarea = getTableView().getItems().get(getIndex());
-                            tareas.remove(tarea);
-                            actualizarContadores(); // Actualizar contadores
-                        });
-                    }
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    deleteButton.setOnAction(event -> {
+                        Tarea tarea = getTableView().getItems().get(getIndex());
+                        tareas.remove(tarea);
+                        actualizarContadores(); // Actualizar contadores
+                    });
                 }
-            };
+            }
         });
 
         // Asignar la lista observable a la TableView
@@ -152,12 +135,12 @@ public class GestorViewController {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Campo vacío");
             alert.setHeaderText(null);
-            alert.setContentText("Por favor, ingresa una descripción para la tarea.");
+            alert.setContentText("Por favor, ingresa una tarea.");
             alert.showAndWait();
         }
     }
 
-    // Método para actualizar el contador de tareas hechas
+    // Metodo para actualizar el contador de tareas hechas
     private void actualizarContadores() {
         int totalTareas = tareas.size(); // Total de tareas
         int tareasCompletadas = (int) tareas.stream().filter(Tarea::isCompletada).count(); // Tareas completadas
